@@ -27,6 +27,10 @@ public class User {
     private String phone;
     @Column
     private String address;
+    @Column
+    private float fairPlayRating;
+    @Column
+    private float abilityRating;
 	
     public User(String name, String email, String password, String phone, String address) {
         this.name = name;
@@ -80,4 +84,11 @@ public class User {
         this.phone = phone;
     }
     
+    public float getFairPlayRating() {
+        return fairPlayRating;
+    }
+    
+    public float getAbilityRating() {
+        return abilityRating;
+    }
 }
