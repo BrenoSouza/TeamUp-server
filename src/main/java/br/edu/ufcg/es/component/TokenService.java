@@ -18,7 +18,6 @@ import br.edu.ufcg.es.util.AuthException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-
 @Component
 public class TokenService {
     private UserService userService;

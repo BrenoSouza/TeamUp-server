@@ -56,13 +56,15 @@ public class UserController {
 
     @RequestMapping(value = "/user", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> editUser(@RequestHeader(value = "Authorization") String token, @Valid @RequestBody final RegisterUser registerUser){
-    	User user = new User(registerUser.getName(),
+        User user = tokenService.getUser(token);
+
+    	User userUpdate = new User(registerUser.getName(),
                     registerUser.getEmail(),
                     registerUser.getPassword(),
                     registerUser.getPhone(),
                     registerUser.getAddress());
 
-            user.setId(user.getId());
-            return new ResponseEntity<>(userService.update(user), HttpStatus.OK);
+            userUpdate.setId(user.getId());
+            return new ResponseEntity<>(userService.update(userUpdate), HttpStatus.OK);
     }
 }
