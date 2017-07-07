@@ -23,6 +23,8 @@ import br.edu.ufcg.es.service.UserService;
 @CrossOrigin
 public class UserController {
     private UserService userService;
+    private TokenService tokenService;
+
 
     @Autowired
     public UserController(UserService userService) {
