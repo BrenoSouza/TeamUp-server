@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import br.edu.ufcg.es.model.User;
 import br.edu.ufcg.es.service.UserService;
+import br.edu.ufcg.es.util.AuthException;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,7 +28,7 @@ public class TokenService {
         this.userService = userService;
     }
     
-    private static final String API_SECRET = "Ve7GLoDiKyX3f3XV";
+    private static final String API_SECRET = "Be7REoNiOyS3f3OU";
     private static final Long EXPIRATION_SECONDS = 604800L;
     private static final Integer DIVIDER = 1000;
 

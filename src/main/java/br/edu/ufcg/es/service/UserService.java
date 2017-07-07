@@ -14,8 +14,8 @@ public class UserService implements Crud<User> {
 	private UserRepository userRepository;
 	
     @Autowired
-    public UserService(UserRepository studentRepository) {
-        this.userRepository = studentRepository;
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 	
 	@Override
@@ -39,18 +39,21 @@ public class UserService implements Crud<User> {
 	}
 
 	@Override
-	public boolean removeById(Long id) {
-		 if (userRepository.exists(id)) {
-	            userRepository.delete(id);
-	            return true;
-	     }
-	     return false;
-	}
-
-	@Override
 	public boolean removeAll() {
 		 userRepository.deleteAll();
 	       	return true;
 	}
+	
+    public User getByEmail(String email) {
+        return userRepository.getByEmail(email);
+    }
 
+    @Override
+    public boolean removeById(Long id) {
+        if (userRepository.exists(id)) {
+            userRepository.delete(id);
+            return true;
+        }
+        return false;
+    }
 }
