@@ -91,4 +91,12 @@ public class User {
     public float getAbilityRating() {
         return abilityRating;
     }
+    
+    public void setAddress(String address) {
+        this.address = address;
+    }
+    
+    public String getAddress() {
+        return address;
+    }
 }
