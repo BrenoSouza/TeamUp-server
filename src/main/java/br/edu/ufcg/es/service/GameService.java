@@ -35,8 +35,7 @@ public class GameService implements Crud<Game> {
 
 	@Override
 	public Game update(Game game) {
-		return null;
-		//return gameRepository.exists(game.getId()) ? gameRepository.save(game) : null;
+		return gameRepository.exists(game.getId()) ? gameRepository.save(game) : null;
 	}
 
 	@Override
@@ -53,5 +52,6 @@ public class GameService implements Crud<Game> {
         }
         return false;
     }
+    
 
 }
