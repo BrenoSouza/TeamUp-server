@@ -34,7 +34,7 @@ public class AuthController {
     @RequestMapping(value = "/auth", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> authUser(final @Valid @RequestBody AuthDTO authDTO) throws JSONException {
         User user = getUser(authDTO.getEmail());
-        System.out.println(authDTO);
+        System.out.println(authDTO);// era pra estar aqui mesmo?
         JSONObject body = new JSONObject();
         if (user == null || !user.getPassword().equals(authDTO.getPassword())){
             body.put("token", JSONObject.NULL);

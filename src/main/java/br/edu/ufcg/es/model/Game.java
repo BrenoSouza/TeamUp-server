@@ -33,13 +33,15 @@ public class Game {
 	@Column
 	private long idOwner;
 	
+
 	@Column
-	private List<Long> invites;
+	private ArrayList<Long> invites;
 	
 	public Game(String date, String local, String sport, String description){
+
 		this.date = date;
 		this.local = local;
-		this.sport = local;
+		this.sport = sport;
 		this.description = description;
 		this.invites = new ArrayList<>();
 	}
@@ -92,7 +94,7 @@ public class Game {
 		return invites;
 	}
 
-	public void setInvites(List<Long> invites) {
+	public void setInvites(ArrayList<Long> invites) {
 		this.invites = invites;
 	}
 	
