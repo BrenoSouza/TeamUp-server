@@ -1,7 +1,6 @@
 package br.edu.ufcg.es.model;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -20,7 +19,7 @@ public class Game {
 	private long id;
 	
 	@Column
-	private Date date;
+	private String date;
 	
 	@Column
 	private String local;
@@ -37,7 +36,7 @@ public class Game {
 	@Column
 	private List<Long> invites;
 	
-	public Game(Date date, String local, String sport, String description){
+	public Game(String date, String local, String sport, String description){
 		this.date = date;
 		this.local = local;
 		this.sport = local;
@@ -49,11 +48,11 @@ public class Game {
 		
 	}
 
-	public Date getDate() {
+	public String getDate() {
 		return date;
 	}
 
-	public void setDate(Date date) {
+	public void setDate(String date) {
 		this.date = date;
 	}
 
@@ -89,15 +88,12 @@ public class Game {
 		this.idOwner = idOwner;
 	}
 
-	public List getInvites() {
+	public List<Long> getInvites() {
 		return invites;
 	}
 
-	public void setInvites(List invites) {
+	public void setInvites(List<Long> invites) {
 		this.invites = invites;
 	}
 	
-	
-	
-
 }
