@@ -32,7 +32,8 @@ public class RegisterGameController {
 	}
 	
     @RequestMapping(value = "/registerGame", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<String> registerGame(@RequestHeader(value = "Authorization") String token, @Valid @RequestBody RegisterGame registerGame){
+    public ResponseEntity<String> registerGame(@RequestHeader(value = "Authorization") String token,
+    		@Valid @RequestBody RegisterGame registerGame){
     	User user = tokenService.getUser(token);
     	
         Game game = new Game(registerGame.getDate(),

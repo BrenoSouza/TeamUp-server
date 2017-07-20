@@ -42,14 +42,23 @@ public class Game {
 		this.description = description;
 		this.invites = new ArrayList<>();
 	}
-	
+
 	public Game(String date, String local, String sport, String description, long idOwner){
 		this.date = date;
 		this.local = local;
 		this.sport = sport;
 		this.description = description;
 		this.idOwner = idOwner;
-		this.invites = new ArrayList<>();
+	}
+	
+	public Game(String date, String local, String sport, String description, long idOwner,
+			ArrayList<Long> invites){
+		this.date = date;
+		this.local = local;
+		this.sport = sport;
+		this.description = description;
+		this.idOwner = idOwner;
+		this.invites = invites;
 	}
 	
 	public Game(){

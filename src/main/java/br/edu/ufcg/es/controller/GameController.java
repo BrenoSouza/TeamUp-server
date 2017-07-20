@@ -47,7 +47,8 @@ public class GameController {
     }
     
     @RequestMapping(value = "/game/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Game> getGameById(@RequestHeader(value = "Authorization") String token, @PathVariable("id") Long id){
+    public ResponseEntity<Game> getGameById(@RequestHeader(value = "Authorization") String token,
+    		@PathVariable("id") Long id){
     	User user = tokenService.getUser(token);
         if(user != null){
             return new ResponseEntity<>(gameService.getById(id), HttpStatus.OK);
@@ -56,7 +57,8 @@ public class GameController {
     }
     
     @RequestMapping(value = "/game/{id}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Game> editUser(@RequestHeader(value = "Authorization") String token, @Valid @RequestBody final RegisterGame registerGame, @PathVariable("id") Long id){
+    public ResponseEntity<Game> editUser(@RequestHeader(value = "Authorization") String token,
+    		@Valid @RequestBody final RegisterGame registerGame, @PathVariable("id") Long id){
         User user = tokenService.getUser(token);
         Game game = gameService.getById(id);
         
@@ -65,10 +67,10 @@ public class GameController {
                     registerGame.getLocal(),
                     registerGame.getSport(),
                     registerGame.getDescription(),
-                    user.getId());
+                    user.getId(),
+                    game.getInvites());
 
             gameUpdate.setId(id);
-            gameUpdate.setInvites(game.getInvites());
             return new ResponseEntity<>(gameService.update(gameUpdate), HttpStatus.OK);
         }
         
