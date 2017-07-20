@@ -67,4 +67,5 @@ public class UserController {
             userUpdate.setId(user.getId());
             return new ResponseEntity<>(userService.update(userUpdate), HttpStatus.OK);
     }
+    
 }
