@@ -1,5 +1,7 @@
 package br.edu.ufcg.es.model;
 
+import java.util.ArrayList;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -31,6 +33,10 @@ public class User {
     private float fairPlayRating;
     @Column
     private float abilityRating;
+    @Column
+    private ArrayList<Long> games;
+    @Column
+    private ArrayList<Long> myGames;
 	
     public User(String name, String email, String password, String phone, String address) {
         this.name = name;
@@ -38,9 +44,11 @@ public class User {
         this.password = password;
         this.phone = phone;
         this.address = address;
+        this.games = new ArrayList<>();
+        this.myGames = new ArrayList<>();
     }
-    
-    public User() {
+
+	public User() {
     	
     }
     
@@ -99,4 +107,20 @@ public class User {
     public String getAddress() {
         return address;
     }
+    
+    public ArrayList<Long> getGames() {
+		return games;
+	}
+
+	public void setGames(ArrayList<Long> games) {
+		this.games = games;
+	}
+
+	public ArrayList<Long> getMyGames() {
+		return myGames;
+	}
+
+	public void setMyGames(ArrayList<Long> myGames) {
+		this.myGames = myGames;
+	}
 }

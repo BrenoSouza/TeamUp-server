@@ -15,11 +15,11 @@ import br.edu.ufcg.es.service.UserService;
 
 @RestController
 @CrossOrigin
-public class RegisterUserController {
+public class RegisterController {
     private UserService userService;
 
     @Autowired
-    public RegisterUserController(UserService userService) {
+    public RegisterController(UserService userService) {
         this.userService = userService;
     }
     
