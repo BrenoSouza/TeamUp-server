@@ -46,7 +46,8 @@ public class UserController {
     }
 
     @RequestMapping(value = "/user/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> getUserById(@RequestHeader(value = "Authorization") String token, @PathVariable("id") Long id){
+    public ResponseEntity<User> getUserById(@RequestHeader(value = "Authorization") String token,
+    		@PathVariable("id") Long id){
     	User user = tokenService.getUser(token);
         if(user != null){
             return new ResponseEntity<>(userService.getById(id), HttpStatus.OK);
@@ -55,7 +56,8 @@ public class UserController {
     }
 
     @RequestMapping(value = "/user", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> editUser(@RequestHeader(value = "Authorization") String token, @Valid @RequestBody final RegisterUser registerUser){
+    public ResponseEntity<User> editUser(@RequestHeader(value = "Authorization") String token,
+    		@Valid @RequestBody final RegisterUser registerUser){
         User user = tokenService.getUser(token);
 
     	User userUpdate = new User(registerUser.getName(),
@@ -67,4 +69,5 @@ public class UserController {
             userUpdate.setId(user.getId());
             return new ResponseEntity<>(userService.update(userUpdate), HttpStatus.OK);
     }
+    
 }
