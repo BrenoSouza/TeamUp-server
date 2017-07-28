@@ -120,6 +120,7 @@ public class GameController {
         return new ResponseEntity<>(new ArrayList<Game>(), HttpStatus.UNAUTHORIZED);
     }
     
+    // Retornar as partidas que eu participo mas que não sou dono, depois ajeitar o nome da rota
     @RequestMapping(value = "/games", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Game>> getMyOwnGames(@RequestHeader(value = "Authorization") String token){
     	User user = tokenService.getUser(token);

@@ -35,6 +35,8 @@ public class Game {
 	@Column
 	private ArrayList<Long> guests;
 	
+	@Column
+	private ArrayList<Long> guestRequests;
 	
 	public Game(String date, String local, String sport, String description){
 		this.date = date;
@@ -42,6 +44,7 @@ public class Game {
 		this.sport = sport;
 		this.description = description;
 		this.guests = new ArrayList<>();
+		this.guestRequests = new ArrayList<>();
 	}
 
 	public Game(String date, String local, String sport, String description, long idOwner){
@@ -122,4 +125,11 @@ public class Game {
 		this.guests = guests;
 	}
 	
+	public ArrayList<Long> getGuestsRequests() {
+		return guests;
+	}
+
+	public void setGuestRequests(ArrayList<Long> guestRequests) {
+		this.guestRequests = guestRequests;
+	}
 }

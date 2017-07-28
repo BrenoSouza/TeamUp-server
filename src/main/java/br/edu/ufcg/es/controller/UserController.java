@@ -95,10 +95,7 @@ public class UserController {
     		user.setFavoriteUsers(favoriteUsers);
     		userService.update(user);
             return new ResponseEntity<>("Usuário desfavoritado com sucesso.", HttpStatus.CREATED);
-    	}
-    	
-    	
-    	
+    	}  	
     }
     
 }
