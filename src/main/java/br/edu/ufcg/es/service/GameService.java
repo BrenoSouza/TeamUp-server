@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.edu.ufcg.es.model.Game;
+import br.edu.ufcg.es.model.User;
 import br.edu.ufcg.es.repository.GameRepository;
 import br.edu.ufcg.es.util.Crud;
 
@@ -52,6 +53,11 @@ public class GameService implements Crud<Game> {
         }
         return false;
     }
+
+	@Override
+	public List<Game> getAllById(List<Long> ids) {
+		return (List<Game>) gameRepository.findAll(ids);
+	}
     
 
 }

@@ -18,26 +18,41 @@ public class User {
 	@Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @Column
+    
+	@Column
     private String name;
-    @Column(unique = true)
+    
+	@Column(unique = true)
     private String email;
-    @Column
+    
+	@Column
     @JsonIgnore
     private String password;
-    @Column
+    
+	@Column
     private String phone;
-    @Column
+    
+	@Column
     private String address;
-    @Column
+    
+	@Column
     private float fairPlayRating;
-    @Column
+    
+	@Column
     private float abilityRating;
-    @Column
+    
+	@Column
     private ArrayList<Long> games;
-    @Column
+    
+	@Column
     private ArrayList<Long> myGames;
 	
+	@Column
+	private ArrayList<Long> gamesRequested;
+    
+	@Column
+	private ArrayList<Long> favoriteUsers;
+    
     public User(String name, String email, String password, String phone, String address) {
         this.name = name;
         this.email = email;

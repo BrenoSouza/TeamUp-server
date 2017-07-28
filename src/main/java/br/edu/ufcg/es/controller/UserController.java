@@ -28,7 +28,6 @@ public class UserController {
     private UserService userService;
     private TokenService tokenService;
 
-
     @Autowired
     public UserController(UserService userService, TokenService tokenService) {
         this.userService = userService;
@@ -68,6 +67,6 @@ public class UserController {
 
             userUpdate.setId(user.getId());
             return new ResponseEntity<>(userService.update(userUpdate), HttpStatus.OK);
-    }
-    
+    }    
+
 }

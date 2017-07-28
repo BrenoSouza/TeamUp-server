@@ -35,6 +35,7 @@ public class Game {
 	@Column
 	private ArrayList<Long> guests;
 	
+	
 	public Game(String date, String local, String sport, String description){
 		this.date = date;
 		this.local = local;
