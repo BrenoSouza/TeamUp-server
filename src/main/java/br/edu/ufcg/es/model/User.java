@@ -138,4 +138,12 @@ public class User {
 	public void setMyGames(ArrayList<Long> myGames) {
 		this.myGames = myGames;
 	}
+	
+	public ArrayList<Long> getFavoriteUsers() {
+		return myGames;
+	}
+
+	public void setFavoriteUsers(ArrayList<Long> favoriteUsers) {
+		this.favoriteUsers = favoriteUsers;
+	}
 }

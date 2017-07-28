@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.edu.ufcg.es.component.TokenService;
+import br.edu.ufcg.es.model.Game;
 import br.edu.ufcg.es.model.User;
 import br.edu.ufcg.es.model.DTO.RegisterUser;
 import br.edu.ufcg.es.service.UserService;
@@ -68,5 +69,14 @@ public class UserController {
             userUpdate.setId(user.getId());
             return new ResponseEntity<>(userService.update(userUpdate), HttpStatus.OK);
     }    
+    
+    @RequestMapping(value = "/favoriteusers", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<User>> getMyFavoriteUsers(@RequestHeader(value = "Authorization") String token){
+    	User user = tokenService.getUser(token);
+        if(user != null){
+            return new ResponseEntity<>(userService.getAllById(user.getGames()), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(new ArrayList<User>(), HttpStatus.UNAUTHORIZED);
+    }
 
 }

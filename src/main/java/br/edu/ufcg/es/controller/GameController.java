@@ -111,7 +111,6 @@ public class GameController {
     	userService.update(user);
     }
     
-    
     @RequestMapping(value = "/mygames", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Game>> getMyGames(@RequestHeader(value = "Authorization") String token){
     	User user = tokenService.getUser(token);
@@ -121,4 +120,12 @@ public class GameController {
         return new ResponseEntity<>(new ArrayList<Game>(), HttpStatus.UNAUTHORIZED);
     }
     
+    @RequestMapping(value = "/games", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<Game>> getMyOwnGames(@RequestHeader(value = "Authorization") String token){
+    	User user = tokenService.getUser(token);
+        if(user != null){
+            return new ResponseEntity<>(gameService.getAllById(user.getGames()), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(new ArrayList<Game>(), HttpStatus.UNAUTHORIZED);
+    }
 }
