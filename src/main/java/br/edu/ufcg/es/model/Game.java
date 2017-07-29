@@ -53,6 +53,8 @@ public class Game {
 		this.sport = sport;
 		this.description = description;
 		this.idOwner = idOwner;
+		this.guests = new ArrayList<>();
+		this.guestRequests = new ArrayList<>();
 	}
 	
 	public Game(String date, String local, String sport, String description, long idOwner,
@@ -63,6 +65,7 @@ public class Game {
 		this.description = description;
 		this.idOwner = idOwner;
 		this.guests = guests;
+		this.guestRequests = new ArrayList<>();
 	}
 	
 	public Game(){
