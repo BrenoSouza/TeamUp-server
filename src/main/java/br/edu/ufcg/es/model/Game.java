@@ -1,7 +1,6 @@
 package br.edu.ufcg.es.model;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,7 +16,7 @@ public class Game {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
-	
+
 	@Column
 	private String date;
 	
@@ -37,12 +36,12 @@ public class Game {
 	@Column
 	private ArrayList<Long> invites;
 	
-	public Game(String date, String local, String sport, String description){
-
+	public Game(String date, String local, String sport, String description, long idOwner){
 		this.date = date;
 		this.local = local;
 		this.sport = sport;
 		this.description = description;
+		this.idOwner = idOwner;
 		this.invites = new ArrayList<>();
 	}
 	
@@ -50,6 +49,14 @@ public class Game {
 		
 	}
 
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+	
 	public String getDate() {
 		return date;
 	}
@@ -90,7 +97,7 @@ public class Game {
 		this.idOwner = idOwner;
 	}
 
-	public List<Long> getInvites() {
+	public ArrayList<Long> getInvites() {
 		return invites;
 	}
 
