@@ -56,4 +56,9 @@ public class UserService implements Crud<User> {
         }
         return false;
     }
+
+	@Override
+	public List<User> getAllById(List<Long> ids) {
+		return (List<User>) userRepository.findAll(ids);
+	}
 }

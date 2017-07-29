@@ -1,5 +1,7 @@
 package br.edu.ufcg.es.model;
 
+import java.util.ArrayList;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -16,31 +18,52 @@ public class User {
 	@Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @Column
+    
+	@Column
     private String name;
-    @Column(unique = true)
+    
+	@Column(unique = true)
     private String email;
-    @Column
+    
+	@Column
     @JsonIgnore
     private String password;
-    @Column
+    
+	@Column
     private String phone;
-    @Column
+    
+	@Column
     private String address;
-    @Column
+    
+	@Column
     private float fairPlayRating;
-    @Column
+    
+	@Column
     private float abilityRating;
+    
+	@Column
+    private ArrayList<Long> games;
+    
+	@Column
+    private ArrayList<Long> myGames;
 	
+	@Column
+	private ArrayList<Long> gamesRequested;
+    
+	@Column
+	private ArrayList<Long> favoriteUsers;
+    
     public User(String name, String email, String password, String phone, String address) {
         this.name = name;
         this.email = email;
         this.password = password;
         this.phone = phone;
         this.address = address;
+        this.games = new ArrayList<>(); // jogos que o usuario participa
+        this.myGames = new ArrayList<>(); // jogos que usuario é adm
     }
-    
-    public User() {
+
+	public User() {
     	
     }
     
@@ -99,4 +122,28 @@ public class User {
     public String getAddress() {
         return address;
     }
+    
+    public ArrayList<Long> getGames() {
+		return games;
+	}
+
+	public void setGames(ArrayList<Long> games) {
+		this.games = games;
+	}
+
+	public ArrayList<Long> getMyGames() {
+		return myGames;
+	}
+
+	public void setMyGames(ArrayList<Long> myGames) {
+		this.myGames = myGames;
+	}
+	
+	public ArrayList<Long> getFavoriteUsers() {
+		return myGames;
+	}
+
+	public void setFavoriteUsers(ArrayList<Long> favoriteUsers) {
+		this.favoriteUsers = favoriteUsers;
+	}
 }
