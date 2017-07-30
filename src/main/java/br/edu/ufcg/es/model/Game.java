@@ -59,14 +59,14 @@ public class Game {
 	}
 	
 	public Game(String date, String local, String sport, String description, long idOwner,
-			ArrayList<Long> guests){
+			ArrayList<Long> guests, ArrayList<Long> guestsRequests){
 		this.date = date;
 		this.local = local;
 		this.sport = sport;
 		this.description = description;
 		this.idOwner = idOwner;
 		this.guests = guests;
-		this.guestRequests = new ArrayList<>();
+		this.guestRequests = guestsRequests;
 	}
 	
 	public Game(){

@@ -64,6 +64,20 @@ public class User {
         this.gamesRequested = new ArrayList<>();
         this.favoriteUsers = new ArrayList<>();
     }
+	
+	public User(String name, String email, String password, String phone, String address, Long id,
+			ArrayList<Long> games, ArrayList<Long> myGames, ArrayList<Long> gamesRequested, ArrayList<Long> favoriteUsers) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.phone = phone;
+        this.address = address;
+        this.id = id;
+        this.games = new ArrayList<>();
+        this.myGames = new ArrayList<>();
+        this.gamesRequested = new ArrayList<>();
+        this.favoriteUsers = new ArrayList<>();
+    }
 
 	public User() {
     	

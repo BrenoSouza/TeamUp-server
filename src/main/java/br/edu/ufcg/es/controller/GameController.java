@@ -70,7 +70,8 @@ public class GameController {
                     registerGame.getSport(),
                     registerGame.getDescription(),
                     user.getId(),
-                    game.getGuests());
+                    game.getGuests(),
+                    game.getGuestsRequests());
 
             gameUpdate.setId(id);
             return new ResponseEntity<>(gameService.update(gameUpdate), HttpStatus.OK);

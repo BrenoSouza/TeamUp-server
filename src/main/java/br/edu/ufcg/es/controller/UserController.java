@@ -68,9 +68,13 @@ public class UserController {
                     registerUser.getEmail(),
                     registerUser.getPassword(),
                     registerUser.getPhone(),
-                    registerUser.getAddress());
+                    registerUser.getAddress(),
+                    user.getId(),
+                    user.getGames(),
+                    user.getMyGames(),
+                    user.getGamesRequested(),
+                    user.getFavoriteUsers());
 
-            userUpdate.setId(user.getId());
             return new ResponseEntity<>(userService.update(userUpdate), HttpStatus.OK);
     }
     
