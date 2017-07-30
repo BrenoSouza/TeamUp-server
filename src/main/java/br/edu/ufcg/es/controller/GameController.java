@@ -81,7 +81,7 @@ public class GameController {
     }
     
     @RequestMapping(value = "/game", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<String> registerGame(@RequestHeader(value = "Authorization") String token,
+    public ResponseEntity<Game> registerGame(@RequestHeader(value = "Authorization") String token,
     		@Valid @RequestBody RegisterGame registerGame){
     	User user = tokenService.getUser(token);
     	
@@ -93,7 +93,7 @@ public class GameController {
         
         gameService.create(game);
         updateUserGames(user, game.getId());
-        return new ResponseEntity<>("Partida criada com sucesso.", HttpStatus.CREATED);
+        return new ResponseEntity<>(game, HttpStatus.CREATED);
     }
     
     //melhorar
