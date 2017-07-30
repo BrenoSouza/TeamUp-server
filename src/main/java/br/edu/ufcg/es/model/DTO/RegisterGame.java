@@ -27,6 +27,10 @@ public class RegisterGame {
 	@Size(min = 0, max = 200, message = "A descrição deve ter no máximo 200 caracters.")
 	private String description;
 
+	@NotNull
+	@Size(min = 3, max = 100, message ="Tamanho inadequado")
+	private String name;
+	
 	public String getDate() {
 		return date;
 	}
@@ -57,6 +61,14 @@ public class RegisterGame {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public String getName() {
+		return this.name;
+	}
+	
+	public void setName(String name) {
+		this.name = name;
 	}
 	
 	

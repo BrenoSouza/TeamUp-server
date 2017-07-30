@@ -32,6 +32,8 @@ public class Game {
 	@Column
 	private long idOwner;
 	
+	@Column
+	private String name;
 
 	@Column
 	private ArrayList<Long> guests;
@@ -39,16 +41,17 @@ public class Game {
 	@Column
 	private ArrayList<Long> guestRequests;
 	
-	public Game(String date, String local, String sport, String description){ // construtor normal
+	public Game(String date, String local, String sport, String description, String name){ // construtor normal
 		this.date = date; 
 		this.local = local;
 		this.sport = sport;
+		this.name = name;
 		this.description = description;
 		this.guests = new ArrayList<>(); // iniciam vazias
 		this.guestRequests = new ArrayList<>();
 	}
 
-	public Game(String date, String local, String sport, String description, long idOwner){ // construtor passando 
+	public Game(String date, String local, String sport, String description, long idOwner, String name){ // construtor passando 
 		this.date = date;																	// o id e sem estrutura de dados
 		this.local = local;
 		this.sport = sport;
@@ -56,13 +59,15 @@ public class Game {
 		this.idOwner = idOwner; // seta um idOwner passado como parametro
 		this.guests = new ArrayList<>();
 		this.guestRequests = new ArrayList<>();
+		this.name = name;
 	}
 	
 	public Game(String date, String local, String sport, String description, long idOwner,
-			ArrayList<Long> guests, ArrayList<Long> guestsRequests){
+			ArrayList<Long> guests, ArrayList<Long> guestsRequests, String name){
 		this.date = date;
 		this.local = local;
 		this.sport = sport;
+		this.name = name;
 		this.description = description;
 		this.idOwner = idOwner; // seta idOwner
 		this.guests = guests;
@@ -89,6 +94,14 @@ public class Game {
 		this.date = date;
 	}
 
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+	
 	public String getLocal() {
 		return local;
 	}
