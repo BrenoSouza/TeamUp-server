@@ -53,7 +53,7 @@ public class Game {
 		this.local = local;
 		this.sport = sport;
 		this.description = description;
-		this.idOwner = idOwner;
+		this.idOwner = idOwner; // seta um idOwner passado como parametro
 		this.guests = new ArrayList<>();
 		this.guestRequests = new ArrayList<>();
 	}
@@ -64,7 +64,7 @@ public class Game {
 		this.local = local;
 		this.sport = sport;
 		this.description = description;
-		this.idOwner = idOwner;
+		this.idOwner = idOwner; // seta idOwner
 		this.guests = guests;
 		this.guestRequests = guestsRequests;
 	}

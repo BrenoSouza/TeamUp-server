@@ -130,6 +130,21 @@ public class GameController {
         return new ResponseEntity<>(new ArrayList<Game>(), HttpStatus.UNAUTHORIZED);
     }
     
+    
+    @RequestMapping(value = "/gamerequest/{id}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Game> requestGame(@RequestHeader(value = "Authorization") String token,
+        	@PathVariable("id") Long id){
+    	
+    	User user = tokenService.getUser(token);
+    	Game game = gameService.getById(id);
+    	game.getGuestsRequests().add(user.getId());
+    	user.getGamesRequested().add(id);
+    	//ArrayList<Long> guestRequests = game.getGuestsRequests();
+    	
+    	userService.update(user);
+        return new ResponseEntity<>(gameService.update(game), HttpStatus.OK);
+    	
+    }
     @RequestMapping(value = "/game/{id}", method = RequestMethod.DELETE, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> deleteGame(@RequestHeader(value = "Authorization") String token,
     		@PathVariable("id") Long id){

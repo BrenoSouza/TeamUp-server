@@ -59,8 +59,8 @@ public class User {
         this.password = password;
         this.phone = phone;
         this.address = address;
-        this.games = new ArrayList<>();
-        this.myGames = new ArrayList<>();
+        this.games = new ArrayList<>(); // jogos que o usuario participa
+        this.myGames = new ArrayList<>(); // jogos que usuario é adm
         this.gamesRequested = new ArrayList<>();
         this.favoriteUsers = new ArrayList<>();
     }
