@@ -1,6 +1,5 @@
 package br.edu.ufcg.es.util;
 
-import java.util.Iterator;
 import java.util.List;
 
 public interface Crud<T> {

@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 import br.edu.ufcg.es.component.TokenService;
 import br.edu.ufcg.es.model.Game;
 import br.edu.ufcg.es.model.User;
-import br.edu.ufcg.es.model.DTO.RegisterGame;
 import br.edu.ufcg.es.model.DTO.RegisterUser;
 import br.edu.ufcg.es.service.GameService;
 import br.edu.ufcg.es.service.UserService;

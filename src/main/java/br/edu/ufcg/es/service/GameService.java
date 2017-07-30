@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.edu.ufcg.es.model.Game;
-import br.edu.ufcg.es.model.User;
 import br.edu.ufcg.es.repository.GameRepository;
 import br.edu.ufcg.es.util.Crud;
 
