@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 import br.edu.ufcg.es.component.TokenService;
 import br.edu.ufcg.es.model.Game;
 import br.edu.ufcg.es.model.User;
-import br.edu.ufcg.es.model.DTO.RegisterGame;
 import br.edu.ufcg.es.model.DTO.RegisterUser;
 import br.edu.ufcg.es.service.GameService;
 import br.edu.ufcg.es.service.UserService;
@@ -89,7 +88,7 @@ public class UserController {
         	Long userId = user.getId();
         	Game game;
         	ArrayList<Long> gameGuests;
-        	
+        	//remove o usuário dos jogos onde é convidado
         	for (Long gameId : games) {
 				game = gameService.getById(gameId);
 				gameGuests = game.getGuests();
@@ -97,7 +96,7 @@ public class UserController {
 				game.setGuests(gameGuests);
 				gameService.update(game);
 			}
-        	
+        	//remove o usuário dos jogos onde solicitou entrada
         	games = user.getGamesRequested();
         	for (Long gameId : games) {
 				game = gameService.getById(gameId);
@@ -106,13 +105,21 @@ public class UserController {
 				game.setGuestRequests(gameGuests);
 				gameService.update(game);
 			}
-
+        	//remove o usuário dos jogos que ele é dono
         	games = user.getMyGames();
         	for (Long gameId : games) {
 				game = gameService.getById(gameId);
 				if (game.getGuests().isEmpty()) {
-					game = null;
-					gameService.update(game);
+					//remove os pedidos de entrada na partida
+		        	ArrayList<Long> guestUsers = game.getGuestsRequests();
+		        	for (Long guestUserId : guestUsers) {
+						User guestUser = userService.getById(guestUserId);
+						games = guestUser.getGamesRequested();
+						games.remove(gameId);
+						guestUser.setGamesRequested(games);
+						userService.update(guestUser);
+					}
+					gameService.removeById(gameId);
 				}
 				else {
 					User newOwner = userService.getById(game.getGuests().get(0));

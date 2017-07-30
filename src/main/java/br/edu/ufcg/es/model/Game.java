@@ -130,7 +130,7 @@ public class Game {
 	}
 	
 	public ArrayList<Long> getGuestsRequests() {
-		return guests;
+		return guestRequests;
 	}
 
 	public void setGuestRequests(ArrayList<Long> guestRequests) {
