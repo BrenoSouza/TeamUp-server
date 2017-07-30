@@ -20,8 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 import br.edu.ufcg.es.component.TokenService;
 import br.edu.ufcg.es.model.Game;
 import br.edu.ufcg.es.model.User;
-import br.edu.ufcg.es.model.DTO.RegisterGame;
 import br.edu.ufcg.es.model.DTO.RegisterUser;
+import br.edu.ufcg.es.service.GameService;
 import br.edu.ufcg.es.service.UserService;
 
 @RestController
@@ -29,11 +29,13 @@ import br.edu.ufcg.es.service.UserService;
 public class UserController {
     private UserService userService;
     private TokenService tokenService;
+    private GameService gameService;
 
     @Autowired
-    public UserController(UserService userService, TokenService tokenService) {
+    public UserController(UserService userService, TokenService tokenService, GameService gameService) {
         this.userService = userService;
         this.tokenService = tokenService;
+        this.gameService = gameService;
     }
 
     @RequestMapping(value = "/user", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -65,11 +67,74 @@ public class UserController {
                     registerUser.getEmail(),
                     registerUser.getPassword(),
                     registerUser.getPhone(),
-                    registerUser.getAddress());
+                    registerUser.getAddress(),
+                    user.getId(),
+                    user.getGames(),
+                    user.getMyGames(),
+                    user.getGamesRequested(),
+                    user.getFavoriteUsers());
 
-            userUpdate.setId(user.getId());
             return new ResponseEntity<>(userService.update(userUpdate), HttpStatus.OK);
-    } 
+    }
+    
+    @RequestMapping(value = "/user", method = RequestMethod.DELETE,
+    		consumes = MediaType.APPLICATION_JSON_UTF8_VALUE,
+    		produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> deleteUser(@RequestHeader(value = "Authorization") String token){
+        User user = tokenService.getUser(token);
+        if (user != null){
+        	//remover das suas partidas, remover das partidas em que é convidado e das partidas que solicitou entrada
+        	ArrayList<Long> games = user.getGames();
+        	Long userId = user.getId();
+        	Game game;
+        	ArrayList<Long> gameGuests;
+        	//remove o usuário dos jogos onde é convidado
+        	for (Long gameId : games) {
+				game = gameService.getById(gameId);
+				gameGuests = game.getGuests();
+				gameGuests.remove(userId);
+				game.setGuests(gameGuests);
+				gameService.update(game);
+			}
+        	//remove o usuário dos jogos onde solicitou entrada
+        	games = user.getGamesRequested();
+        	for (Long gameId : games) {
+				game = gameService.getById(gameId);
+				gameGuests = game.getGuestsRequests();
+				gameGuests.remove(userId);
+				game.setGuestRequests(gameGuests);
+				gameService.update(game);
+			}
+        	//remove o usuário dos jogos que ele é dono
+        	games = user.getMyGames();
+        	for (Long gameId : games) {
+				game = gameService.getById(gameId);
+				if (game.getGuests().isEmpty()) {
+					//remove os pedidos de entrada na partida
+		        	ArrayList<Long> guestUsers = game.getGuestsRequests();
+		        	for (Long guestUserId : guestUsers) {
+						User guestUser = userService.getById(guestUserId);
+						games = guestUser.getGamesRequested();
+						games.remove(gameId);
+						guestUser.setGamesRequested(games);
+						userService.update(guestUser);
+					}
+					gameService.removeById(gameId);
+				}
+				else {
+					User newOwner = userService.getById(game.getGuests().get(0));
+					game.setIdOwner(game.getGuests().get(0));
+					ArrayList<Long> newOwnerGames = newOwner.getMyGames();
+					newOwnerGames.add(gameId);
+					userService.update(newOwner);
+					gameService.update(game);
+				}
+			}
+        	userService.removeById(user.getId());
+        	return new ResponseEntity<>("Usuário deletado do sistema com sucesso.", HttpStatus.OK);
+        }
+        return new ResponseEntity<>("AUTH ERROR.", HttpStatus.UNAUTHORIZED);
+    }
     
     @RequestMapping(value = "/favoriteusers", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<User>> getMyFavoriteUsers(@RequestHeader(value = "Authorization") String token){

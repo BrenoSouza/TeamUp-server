@@ -32,8 +32,7 @@ public class GameController {
     private UserService userService;
     
     @Autowired
-	public GameController(GameService gameService, TokenService tokenService, UserService userService) {
-		super();
+    public GameController(GameService gameService, TokenService tokenService, UserService userService) {
 		this.gameService = gameService;
 		this.tokenService = tokenService;
 		this.userService = userService;
@@ -71,7 +70,8 @@ public class GameController {
                     registerGame.getSport(),
                     registerGame.getDescription(),
                     user.getId(),
-                    game.getGuests());
+                    game.getGuests(),
+                    game.getGuestsRequests());
 
             gameUpdate.setId(id);
             return new ResponseEntity<>(gameService.update(gameUpdate), HttpStatus.OK);
@@ -97,17 +97,17 @@ public class GameController {
     }
     
     //melhorar
-    private void updateUserGames(User user, long gameId){
-    	ArrayList<Long> userGames = user.getMyGames();
+    private void updateUserGames(User user, long gameId){ // adiciona uma partida a lista de partidas em que
+    	ArrayList<Long> userGames = user.getMyGames();	  // o usuario é o dono
     	userGames.add(gameId);
     	user.setMyGames(userGames);
     	userService.update(user);
     }
     
-    private void updateGuestUserGames(User user, long gameId){
-    	ArrayList<Long> userGames = user.getGames();
-    	userGames.add(gameId);
-    	user.setGames(userGames);
+    private void updateGuestUserGames(User user, long gameId){ // adiciona uma partida a lista de partidas em que
+    	ArrayList<Long> userGuestGames = user.getGames();		// o usuario é convidado
+    	userGuestGames.add(gameId);
+    	user.setGames(userGuestGames);
     	userService.update(user);
     }
     
@@ -122,11 +122,191 @@ public class GameController {
     
     // Retornar as partidas que eu participo mas que não sou dono, depois ajeitar o nome da rota
     @RequestMapping(value = "/games", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Game>> getMyOwnGames(@RequestHeader(value = "Authorization") String token){
+    public ResponseEntity<List<Game>> getGames(@RequestHeader(value = "Authorization") String token){
     	User user = tokenService.getUser(token);
         if(user != null){
             return new ResponseEntity<>(gameService.getAllById(user.getGames()), HttpStatus.OK);
         }
         return new ResponseEntity<>(new ArrayList<Game>(), HttpStatus.UNAUTHORIZED);
     }
+    
+    @RequestMapping(value = "/gamerequest/{id}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Game> requestGame(@RequestHeader(value = "Authorization") String token,
+        	@PathVariable("id") Long id){
+    	
+    	User user = tokenService.getUser(token);
+    	Game game = gameService.getById(id);
+    	
+    	if (user != null) {
+        	ArrayList<Long> guestRequests = game.getGuestsRequests();
+        	guestRequests.add(user.getId());
+        	game.setGuestRequests(guestRequests);
+        	
+        	ArrayList<Long> gamesRequested = user.getGamesRequested();
+        	gamesRequested.add(id);
+        	user.setGamesRequested(gamesRequested);
+        	
+        	userService.update(user);
+        	return new ResponseEntity<>(gameService.update(game), HttpStatus.OK);
+    	}
+    	return new ResponseEntity<>(new Game(), HttpStatus.UNAUTHORIZED);
+    }
+    
+    @RequestMapping(value = "/acceptrequest/{gameId}/{requestedId}", method = RequestMethod.POST) 
+    public ResponseEntity<Game> acceptRequest(@RequestHeader(value = "Authorization") String token, 
+    		@PathVariable("gameId") Long gameId, @PathVariable("requestedId") Long requestedId ){
+    	
+    	User user = tokenService.getUser(token);
+    	User requestUser = userService.getById(requestedId);
+    	Game game = gameService.getById(gameId);
+    	
+    	if (user != null && user.getId() == game.getIdOwner()) {
+    		game.getGuests().add(requestedId);
+    		game.getGuestsRequests().remove(requestedId);
+    		requestUser.getGamesRequested().remove(game.getId());
+    		requestUser.getGames().add(gameId);
+    		
+    		return new ResponseEntity<>(gameService.update(game), HttpStatus.OK);
+    	}
+    	
+    	return new ResponseEntity<>(new Game(), HttpStatus.UNAUTHORIZED);
+    }
+    
+    @RequestMapping(value = "/rejectrequest/{gameId}/{requestedId}", method = RequestMethod.POST)
+    public ResponseEntity<Game> rejectRequest(@RequestHeader(value = "Authorization") String token, 
+    		@PathVariable("gameId") Long gameId, @PathVariable("requestedId") Long requestedId){
+    	
+    	User user = tokenService.getUser(token);
+    	User requestUser = userService.getById(requestedId);
+    	Game game = gameService.getById(gameId);
+    	
+    	if (user != null && user.getId() == game.getIdOwner()) {
+    		game.getGuestsRequests().remove(requestedId);
+    		requestUser.getGamesRequested().remove(gameId);
+    		
+    		return new ResponseEntity<>(gameService.update(game), HttpStatus.OK);
+    	}
+    	
+    	
+    	return new ResponseEntity<>(new Game(), HttpStatus.UNAUTHORIZED);
+    }
+    
+    @RequestMapping(value = "/guestRequests/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<User>> getMyFavoriteUsers(@RequestHeader(value = "Authorization") String token,
+    		@PathVariable("id") Long id){
+    	User user = tokenService.getUser(token);
+    	Game game = gameService.getById(id);
+        if(user != null && user.getId() == game.getIdOwner()) {
+            return new ResponseEntity<>(userService.getAllById(game.getGuestsRequests()), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(new ArrayList<User>(), HttpStatus.UNAUTHORIZED);
+    }
+    
+    @RequestMapping(value = "/leaveGame/{id}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> leaveGame(@RequestHeader(value = "Authorization") String token,
+    		@PathVariable("id") Long id){
+    	User user = tokenService.getUser(token);
+    	Game game = gameService.getById(id);
+    	if (user != null) {			
+    		if (user.getId() != game.getIdOwner()) {
+    			ArrayList<Long> games = user.getGames();
+    			games.remove(id);
+    			user.setGames(games);
+    			
+    			ArrayList<Long> guestUsers = game.getGuests();
+    			guestUsers.remove(user.getId());
+    			game.setGuests(guestUsers);
+    			gameService.update(game);
+    		}
+    		else {
+    			ArrayList<Long> games = user.getMyGames();
+    			games.remove(id);
+    			user.setMyGames(games);
+    			
+				if (game.getGuests().isEmpty()) {
+					//remove os pedidos de entrada na partida
+		        	ArrayList<Long> guestUsers = game.getGuestsRequests();
+		        	for (Long userId : guestUsers) {
+						User guestUser = userService.getById(userId);
+						games = guestUser.getGamesRequested();
+						games.remove(id);
+						guestUser.setGamesRequested(games);
+						userService.update(guestUser);
+					}
+					gameService.removeById(id);
+				}
+				else {
+					User newOwner = userService.getById(game.getGuests().get(0));
+					game.setIdOwner(game.getGuests().get(0));
+					ArrayList<Long> newOwnerGames = newOwner.getMyGames();
+					newOwnerGames.add(id);
+					userService.update(newOwner);
+					gameService.update(game);
+				}
+    		}
+    		userService.update(user);
+    		return new ResponseEntity<>("Usuário saiu da Partida com sucesso.", HttpStatus.OK);
+    	}
+    	return new ResponseEntity<>("AUTH ERROR", HttpStatus.UNAUTHORIZED);
+    }
+    
+    @RequestMapping(value = "/kickUser/{id}/{userId}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Game> kickUser(@RequestHeader(value = "Authorization") String token,
+    		@PathVariable("id") Long id, @PathVariable("userId") Long userId){
+    	User user = tokenService.getUser(token);
+    	User guestUser = userService.getById(userId);
+    	Game game = gameService.getById(id);
+    	if (user != null && user.getId() == game.getIdOwner()) {
+			ArrayList<Long> games = guestUser.getGames();
+			games.remove(id);
+			guestUser.setGames(games);
+			
+			ArrayList<Long> guestUsers = game.getGuests();
+			guestUsers.remove(guestUser.getId());
+			game.setGuests(guestUsers);
+			
+    		return new ResponseEntity<>(gameService.update(game), HttpStatus.OK);
+    	}
+    	return new ResponseEntity<>(new Game(), HttpStatus.UNAUTHORIZED);
+    }
+    
+    @RequestMapping(value = "/game/{id}", method = RequestMethod.DELETE, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> deleteGame(@RequestHeader(value = "Authorization") String token,
+    		@PathVariable("id") Long id){
+        User user = tokenService.getUser(token);
+        Game game = gameService.getById(id);
+        ArrayList<Long> games;
+        ArrayList<Long> guestUsers;
+        User guestUser;
+        
+        if (game.getIdOwner() == user.getId()) {
+        	games = user.getMyGames();
+        	games.remove(id);
+        	user.setMyGames(games);
+        	userService.update(user);
+        	
+        	guestUsers = game.getGuests();
+        	for (Long userId : guestUsers) {
+				guestUser = userService.getById(userId);
+				games = guestUser.getGames();
+				games.remove(id);
+				guestUser.setGames(games);
+				userService.update(guestUser);
+			}
+        	
+        	guestUsers = game.getGuestsRequests();
+        	for (Long userId : guestUsers) {
+				guestUser = userService.getById(userId);
+				games = guestUser.getGamesRequested();
+				games.remove(id);
+				guestUser.setGamesRequested(games);
+				userService.update(guestUser);
+			}
+        	
+        	gameService.removeById(id);
+        	return new ResponseEntity<>("Partida deletada do sistema com sucesso.", HttpStatus.OK);
+        }
+        return new ResponseEntity<>("AUTH ERROR.", HttpStatus.UNAUTHORIZED);
+    }
+    
 }
