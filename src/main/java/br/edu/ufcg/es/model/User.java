@@ -52,8 +52,8 @@ public class User {
     
 	@Column
 	private ArrayList<Long> favoriteUsers;
-    
-    public User(String name, String email, String password, String phone, String address) {
+
+	public User(String name, String email, String password, String phone, String address) {
         this.name = name;
         this.email = email;
         this.password = password;
@@ -61,6 +61,10 @@ public class User {
         this.address = address;
         this.games = new ArrayList<>(); // jogos que o usuario participa
         this.myGames = new ArrayList<>(); // jogos que usuario é adm
+        this.games = new ArrayList<>();
+        this.myGames = new ArrayList<>();
+        this.gamesRequested = new ArrayList<>();
+        this.favoriteUsers = new ArrayList<>();
     }
 
 	public User() {
@@ -140,10 +144,18 @@ public class User {
 	}
 	
 	public ArrayList<Long> getFavoriteUsers() {
-		return myGames;
+		return favoriteUsers;
 	}
 
 	public void setFavoriteUsers(ArrayList<Long> favoriteUsers) {
 		this.favoriteUsers = favoriteUsers;
+	}
+	
+    public ArrayList<Long> getGamesRequested() {
+		return gamesRequested;
+	}
+
+	public void setGamesRequested(ArrayList<Long> gamesRequested) {
+		this.gamesRequested = gamesRequested;
 	}
 }
