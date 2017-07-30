@@ -70,7 +70,8 @@ public class GameController {
                     registerGame.getSport(),
                     registerGame.getDescription(),
                     user.getId(),
-                    game.getGuests());
+                    game.getGuests(),
+                    game.getGuestsRequests());
 
             gameUpdate.setId(id);
             return new ResponseEntity<>(gameService.update(gameUpdate), HttpStatus.OK);
@@ -144,4 +145,42 @@ public class GameController {
         return new ResponseEntity<>(gameService.update(game), HttpStatus.OK);
     	
     }
- }
+    @RequestMapping(value = "/game/{id}", method = RequestMethod.DELETE, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> deleteGame(@RequestHeader(value = "Authorization") String token,
+    		@PathVariable("id") Long id){
+        User user = tokenService.getUser(token);
+        Game game = gameService.getById(id);
+        ArrayList<Long> games;
+        ArrayList<Long> guestUsers;
+        User guestUser;
+        
+        if (game.getIdOwner() == user.getId()) {
+        	games = user.getMyGames();
+        	games.remove(id);
+        	user.setMyGames(games);
+        	userService.update(user);
+        	
+        	guestUsers = game.getGuests();
+        	for (Long userId : guestUsers) {
+				guestUser = userService.getById(userId);
+				games = guestUser.getGames();
+				games.remove(id);
+				guestUser.setGames(games);
+				userService.update(guestUser);
+			}
+        	
+        	guestUsers = game.getGuestsRequests();
+        	for (Long userId : guestUsers) {
+				guestUser = userService.getById(userId);
+				games = guestUser.getGamesRequested();
+				games.remove(id);
+				guestUser.setGamesRequested(games);
+				userService.update(guestUser);
+			}
+        	
+        	gameService.removeById(id);
+        	return new ResponseEntity<>("Partida deletada do sistema com sucesso.", HttpStatus.OK);
+        }
+        return new ResponseEntity<>("AUTH ERROR.", HttpStatus.UNAUTHORIZED);
+    }
+}
