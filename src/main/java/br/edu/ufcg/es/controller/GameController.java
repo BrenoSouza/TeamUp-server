@@ -205,7 +205,7 @@ public class GameController {
     }
     
     @RequestMapping(value = "/leaveGame/{id}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> leaveGame(@RequestHeader(value = "Authorization") String token,
+    public ResponseEntity<User> leaveGame(@RequestHeader(value = "Authorization") String token,
     		@PathVariable("id") Long id){
     	User user = tokenService.getUser(token);
     	Game game = gameService.getById(id);
@@ -247,9 +247,9 @@ public class GameController {
 				}
     		}
     		userService.update(user);
-    		return new ResponseEntity<>("Usuário saiu da Partida com sucesso.", HttpStatus.OK);
+    		return new ResponseEntity<>(user, HttpStatus.OK);
     	}
-    	return new ResponseEntity<>("AUTH ERROR", HttpStatus.UNAUTHORIZED);
+    	return new ResponseEntity<>(user, HttpStatus.UNAUTHORIZED);
     }
     
     @RequestMapping(value = "/kickUser/{id}/{userId}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -273,7 +273,7 @@ public class GameController {
     }
     
     @RequestMapping(value = "/game/{id}", method = RequestMethod.DELETE, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> deleteGame(@RequestHeader(value = "Authorization") String token,
+    public ResponseEntity<User> deleteGame(@RequestHeader(value = "Authorization") String token,
     		@PathVariable("id") Long id){
         User user = tokenService.getUser(token);
         Game game = gameService.getById(id);
@@ -306,9 +306,9 @@ public class GameController {
 			}
         	
         	gameService.removeById(id);
-        	return new ResponseEntity<>("Partida deletada do sistema com sucesso.", HttpStatus.OK);
+        	return new ResponseEntity<>(user, HttpStatus.OK);
         }
-        return new ResponseEntity<>("AUTH ERROR.", HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(user, HttpStatus.UNAUTHORIZED);
     }
     
 }

@@ -146,7 +146,7 @@ public class UserController {
     }
     
     @RequestMapping(value = "/favorite/{id}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<String> addFavoriteUser(@RequestHeader(value = "Authorization") String token,
+    public ResponseEntity<User> addOrRemoveFavoriteUser(@RequestHeader(value = "Authorization") String token,
     	@PathVariable("id") Long id){
     	User user = tokenService.getUser(token);
     	ArrayList<Long> favoriteUsers = user.getFavoriteUsers();
@@ -154,12 +154,12 @@ public class UserController {
     		favoriteUsers.add(id);
     		user.setFavoriteUsers(favoriteUsers);
     		userService.update(user);
-            return new ResponseEntity<>("Usuário favoritado com sucesso.", HttpStatus.CREATED);
+            return new ResponseEntity<>(user, HttpStatus.CREATED);
     	} else {
     		favoriteUsers.remove(id);
     		user.setFavoriteUsers(favoriteUsers);
     		userService.update(user);
-            return new ResponseEntity<>("Usuário desfavoritado com sucesso.", HttpStatus.CREATED);
+            return new ResponseEntity<>(user, HttpStatus.CREATED);
     	}  	
     }
     
