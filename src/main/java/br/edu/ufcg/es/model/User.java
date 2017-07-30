@@ -142,7 +142,7 @@ public class User {
 	}
 	
 	public ArrayList<Long> getFavoriteUsers() {
-		return myGames;
+		return favoriteUsers;
 	}
 
 	public void setFavoriteUsers(ArrayList<Long> favoriteUsers) {

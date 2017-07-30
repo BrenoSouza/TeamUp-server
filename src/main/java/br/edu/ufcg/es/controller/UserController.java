@@ -74,7 +74,9 @@ public class UserController {
             return new ResponseEntity<>(userService.update(userUpdate), HttpStatus.OK);
     }
     
-    @RequestMapping(value = "/user", method = RequestMethod.DELETE, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/user", method = RequestMethod.DELETE,
+    		consumes = MediaType.APPLICATION_JSON_UTF8_VALUE,
+    		produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> deleteUser(@RequestHeader(value = "Authorization") String token){
         User user = tokenService.getUser(token);
         if (user != null){
@@ -100,12 +102,13 @@ public class UserController {
 				game.setGuestRequests(gameGuests);
 				gameService.update(game);
 			}
-        	// oq fazer quando ele for o dono da partida?
+
         	games = user.getMyGames();
         	for (Long gameId : games) {
 				game = gameService.getById(gameId);
 				if (game.getGuests().isEmpty()) {
-					//apagar a partida
+					game = null;
+					gameService.update(game);
 				}
 				else {
 					User newOwner = userService.getById(game.getGuests().get(0));
