@@ -58,5 +58,17 @@ public class GameService implements Crud<Game> {
 		return (List<Game>) gameRepository.findAll(ids);
 	}
     
+	public List<Game> getBySport(String sport) {
+		return (List<Game>) gameRepository.getBySport(sport);
+	}
 
+	@Override
+	public List<Game> findByName(String name) {
+		return (List<Game>) gameRepository.getByName(name); 
+	}
+
+	@Override
+	public List<Game> findByAddress(String local) {
+		return (List<Game>) gameRepository.getByLocal(local);
+	}
 }

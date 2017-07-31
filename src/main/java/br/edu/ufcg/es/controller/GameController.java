@@ -194,7 +194,7 @@ public class GameController {
     }
     
     @RequestMapping(value = "/guestRequests/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<User>> getMyFavoriteUsers(@RequestHeader(value = "Authorization") String token,
+    public ResponseEntity<List<User>> getGameRequests(@RequestHeader(value = "Authorization") String token,
     		@PathVariable("id") Long id){
     	User user = tokenService.getUser(token);
     	Game game = gameService.getById(id);

@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.edu.ufcg.es.model.Game;
 import br.edu.ufcg.es.model.User;
 import br.edu.ufcg.es.repository.UserRepository;
 import br.edu.ufcg.es.util.Crud;
@@ -60,5 +61,15 @@ public class UserService implements Crud<User> {
 	@Override
 	public List<User> getAllById(List<Long> ids) {
 		return (List<User>) userRepository.findAll(ids);
+	}
+	
+	@Override
+	public List<User> findByName(String name) {
+		return (List<User>) userRepository.getByName(name); 
+	}
+	
+	@Override
+	public List<User> findByAddress(String address) {
+		return (List<User>) userRepository.getByAddress(address); 
 	}
 }
