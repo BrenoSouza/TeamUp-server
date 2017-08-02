@@ -52,6 +52,9 @@ public class User {
     
 	@Column
 	private ArrayList<Long> favoriteUsers;
+	
+	@Column
+	private ArrayList<Long> invitesReceived;
 
 	public User(String name, String email, String password, String phone, String address) {
         this.name = name;
@@ -63,20 +66,23 @@ public class User {
         this.myGames = new ArrayList<>(); // jogos que usuario é adm
         this.gamesRequested = new ArrayList<>();
         this.favoriteUsers = new ArrayList<>();
+        this.invitesReceived = new ArrayList<>();
     }
 	
 	public User(String name, String email, String password, String phone, String address, Long id,
-			ArrayList<Long> games, ArrayList<Long> myGames, ArrayList<Long> gamesRequested, ArrayList<Long> favoriteUsers) {
+			ArrayList<Long> games, ArrayList<Long> myGames, ArrayList<Long> gamesRequested,
+			ArrayList<Long> favoriteUsers, ArrayList<Long> invitesReceived) {
         this.name = name;
         this.email = email;
         this.password = password;
         this.phone = phone;
         this.address = address;
         this.id = id;
-        this.games = new ArrayList<>();
-        this.myGames = new ArrayList<>();
-        this.gamesRequested = new ArrayList<>();
-        this.favoriteUsers = new ArrayList<>();
+        this.games = games;
+        this.myGames = myGames;
+        this.gamesRequested = gamesRequested;
+        this.favoriteUsers = favoriteUsers;
+        this.invitesReceived = invitesReceived;
     }
 
 	public User() {
@@ -170,4 +176,13 @@ public class User {
 	public void setGamesRequested(ArrayList<Long> gamesRequested) {
 		this.gamesRequested = gamesRequested;
 	}
+	
+	public ArrayList<Long> getInvitesReceived() {
+		return invitesReceived;
+	}
+
+	public void setInvitesReceived(ArrayList<Long> invitesReceived) {
+		this.invitesReceived = invitesReceived;
+	}
+	
 }

@@ -72,7 +72,8 @@ public class UserController {
                     user.getGames(),
                     user.getMyGames(),
                     user.getGamesRequested(),
-                    user.getFavoriteUsers());
+                    user.getFavoriteUsers(),
+                    user.getInvitesReceived());
 
             return new ResponseEntity<>(userService.update(userUpdate), HttpStatus.OK);
     }
@@ -174,5 +175,46 @@ public class UserController {
        return new ResponseEntity<>(new ArrayList<User>(), HttpStatus.UNAUTHORIZED);
     }
 
+    @RequestMapping(value = "/gameInvites", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<Game>> getMyGameInvites(@RequestHeader(value = "Authorization") String token){
+    	User user = tokenService.getUser(token);
+        if(user != null){
+            return new ResponseEntity<>(gameService.getAllById(user.getInvitesReceived()), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(new ArrayList<Game>(), HttpStatus.UNAUTHORIZED);
+    }
+    
+    @RequestMapping(value = "/acceptInvite/{gameId}", method = RequestMethod.POST) 
+    public ResponseEntity<Game> acceptInvite(@RequestHeader(value = "Authorization") String token, 
+    		@PathVariable("gameId") Long gameId){
+    	
+    	User user = tokenService.getUser(token);
+    	Game game = gameService.getById(gameId);
+    	
+    	if (user != null) {
+    		game.getGuests().add(user.getId());
+    		
+    		user.getInvitesReceived().remove(game.getId());
+    		user.getGames().add(gameId);
+    		
+    		return new ResponseEntity<>(gameService.update(game), HttpStatus.OK);
+    	}
+    	return new ResponseEntity<>(new Game(), HttpStatus.UNAUTHORIZED);
+    }
+    
+    @RequestMapping(value = "/rejectInvite/{gameId}", method = RequestMethod.POST) 
+    public ResponseEntity<Game> rejectInvite(@RequestHeader(value = "Authorization") String token, 
+    		@PathVariable("gameId") Long gameId){
+    	
+    	User user = tokenService.getUser(token);
+    	Game game = gameService.getById(gameId);
+    	
+    	if (user != null) {
+    		user.getInvitesReceived().remove(game.getId());
+    		
+    		return new ResponseEntity<>(gameService.update(game), HttpStatus.OK);
+    	}
+    	return new ResponseEntity<>(new Game(), HttpStatus.UNAUTHORIZED);
+    }
     
 }

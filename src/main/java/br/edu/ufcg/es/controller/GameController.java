@@ -98,18 +98,10 @@ public class GameController {
         return new ResponseEntity<>(game, HttpStatus.CREATED);
     }
     
-    //melhorar
     private void updateUserGames(User user, long gameId){ // adiciona uma partida a lista de partidas em que
     	ArrayList<Long> userGames = user.getMyGames();	  // o usuario é o dono
     	userGames.add(gameId);
     	user.setMyGames(userGames);
-    	userService.update(user);
-    }
-    
-    private void updateGuestUserGames(User user, long gameId){ // adiciona uma partida a lista de partidas em que
-    	ArrayList<Long> userGuestGames = user.getGames();		// o usuario é convidado
-    	userGuestGames.add(gameId);
-    	user.setGames(userGuestGames);
     	userService.update(user);
     }
     
@@ -132,7 +124,7 @@ public class GameController {
         return new ResponseEntity<>(new ArrayList<Game>(), HttpStatus.UNAUTHORIZED);
     }
     
-    @RequestMapping(value = "/gamerequest/{id}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/gameRequest/{id}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Game> requestGame(@RequestHeader(value = "Authorization") String token,
         	@PathVariable("id") Long id){
     	
@@ -154,7 +146,7 @@ public class GameController {
     	return new ResponseEntity<>(new Game(), HttpStatus.UNAUTHORIZED);
     }
     
-    @RequestMapping(value = "/acceptrequest/{gameId}/{requestedId}", method = RequestMethod.POST) 
+    @RequestMapping(value = "/acceptRequest/{gameId}/{requestedId}", method = RequestMethod.POST) 
     public ResponseEntity<Game> acceptRequest(@RequestHeader(value = "Authorization") String token, 
     		@PathVariable("gameId") Long gameId, @PathVariable("requestedId") Long requestedId ){
     	
@@ -170,11 +162,10 @@ public class GameController {
     		
     		return new ResponseEntity<>(gameService.update(game), HttpStatus.OK);
     	}
-    	
     	return new ResponseEntity<>(new Game(), HttpStatus.UNAUTHORIZED);
     }
     
-    @RequestMapping(value = "/rejectrequest/{gameId}/{requestedId}", method = RequestMethod.POST)
+    @RequestMapping(value = "/rejectRequest/{gameId}/{requestedId}", method = RequestMethod.POST)
     public ResponseEntity<Game> rejectRequest(@RequestHeader(value = "Authorization") String token, 
     		@PathVariable("gameId") Long gameId, @PathVariable("requestedId") Long requestedId){
     	
@@ -187,10 +178,25 @@ public class GameController {
     		requestUser.getGamesRequested().remove(gameId);
     		
     		return new ResponseEntity<>(gameService.update(game), HttpStatus.OK);
-    	}
-    	
-    	
+    	}    	
     	return new ResponseEntity<>(new Game(), HttpStatus.UNAUTHORIZED);
+    }
+    
+    @RequestMapping(value = "/invite/{id}/{userId}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Game> inviteUser(@RequestHeader(value = "Authorization") String token,
+        	@PathVariable("id") Long id, @PathVariable("userId") Long userId){
+    	
+    	User user = tokenService.getUser(token);
+    	Game game = gameService.getById(id);
+    	User invitedUser = userService.getById(userId);
+    	
+    	if (user != null && user.getId() == game.getIdOwner()) {
+    		invitedUser.getInvitesReceived().add(id);
+    		
+        	userService.update(invitedUser);
+        	return new ResponseEntity<>(gameService.update(game), HttpStatus.OK);
+    	}
+    	return new ResponseEntity<>(game, HttpStatus.UNAUTHORIZED);
     }
     
     @RequestMapping(value = "/guestRequests/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
