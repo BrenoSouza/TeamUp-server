@@ -14,13 +14,13 @@ public class RegisterGame {
 	@NotNull
     @NotEmpty
     @NotBlank
-    @Size(min = 10, max = 50, message = "O endereço deve ter entre 10 e 50 caracters.")
+    @Size(min = 0, max = 50, message = "O endereço deve ter entre 10 e 50 caracters.")
 	private String local;
 	
 	@NotNull
     @NotEmpty
     @NotBlank
-	@Size(min = 5, max = 20, message = "O nome do esporte deve ter entre 5 e 20 caracters.")
+	@Size(min = 3, max = 20, message = "O nome do esporte deve ter entre 5 e 20 caracters.")
 	private String sport;
 	
 	@NotNull

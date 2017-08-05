@@ -19,7 +19,7 @@ public class RegisterUser {
     @NotNull
     @NotEmpty
     @NotBlank
-    @Size(min = 8, max = 16, message = "A senha deve ter entre 8 e 16 caracters.")
+    @Size(min = 5, max = 16, message = "A senha deve ter entre 8 e 16 caracters.")
     private String password;
     @NotNull
     @NotEmpty
@@ -29,7 +29,7 @@ public class RegisterUser {
     @NotNull
     @NotEmpty
     @NotBlank
-    @Size(min = 10, max = 50, message = "O endereço deve ter entre 10 e 50 caracters.")
+    @Size(min = 0, max = 50, message = "O endereço deve ter entre 10 e 50 caracters.")
     private String address;
 
     public RegisterUser() {

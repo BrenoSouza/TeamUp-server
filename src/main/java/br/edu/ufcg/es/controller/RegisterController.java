@@ -30,8 +30,10 @@ public class RegisterController {
                                 registerUser.getPassword(),
                                 registerUser.getPhone(),
                                 registerUser.getAddress());
-
-        userService.create(user);
-        return new ResponseEntity<>(user, HttpStatus.CREATED);
+        if(userService.getByEmail(user.getEmail()) == null) {
+        	userService.create(user);
+        	return new ResponseEntity<>(user, HttpStatus.CREATED);
+        }
+        return new ResponseEntity<>(new User(), HttpStatus.CONFLICT);
     }
 }
