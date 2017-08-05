@@ -317,4 +317,22 @@ public class GameController {
         return new ResponseEntity<>(user, HttpStatus.UNAUTHORIZED);
     }
     
+    @RequestMapping(value = "/evaluate/{id}/{userId}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Game> evaluateUsers(@RequestHeader(value = "Authorization") String token,
+        	@PathVariable("id") Long id, @PathVariable("userId") Long userId, @RequestBody int ability,
+        	@RequestBody int fairPlay){
+    	
+    	User user = tokenService.getUser(token);
+    	Game game = gameService.getById(id);
+    	User evaluatedUser = userService.getById(userId);
+    	
+    	if (user != null) {
+    		evaluatedUser.computeRating(ability, fairPlay);
+    		
+        	userService.update(evaluatedUser);
+        	return new ResponseEntity<>(gameService.update(game), HttpStatus.OK);
+    	}
+    	return new ResponseEntity<>(game, HttpStatus.UNAUTHORIZED);
+    }
+    
 }

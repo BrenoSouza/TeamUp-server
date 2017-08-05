@@ -55,6 +55,9 @@ public class User {
 	
 	@Column
 	private ArrayList<Long> invitesReceived;
+	
+	@Column
+	private int timesRated;
 
 	public User(String name, String email, String password, String phone, String address) {
         this.name = name;
@@ -67,11 +70,15 @@ public class User {
         this.gamesRequested = new ArrayList<>();
         this.favoriteUsers = new ArrayList<>();
         this.invitesReceived = new ArrayList<>();
+        this.timesRated = 0;
+        this.abilityRating = 0;
+        this.fairPlayRating = 0;
     }
-	
+
 	public User(String name, String email, String password, String phone, String address, Long id,
 			ArrayList<Long> games, ArrayList<Long> myGames, ArrayList<Long> gamesRequested,
-			ArrayList<Long> favoriteUsers, ArrayList<Long> invitesReceived) {
+			ArrayList<Long> favoriteUsers, ArrayList<Long> invitesReceived, int timesRated,
+			float abilityRating, float fairPlayRating) {
         this.name = name;
         this.email = email;
         this.password = password;
@@ -83,6 +90,9 @@ public class User {
         this.gamesRequested = gamesRequested;
         this.favoriteUsers = favoriteUsers;
         this.invitesReceived = invitesReceived;
+        this.timesRated = timesRated;
+        this.abilityRating = abilityRating;
+        this.fairPlayRating = fairPlayRating;
     }
 
 	public User() {
@@ -127,14 +137,6 @@ public class User {
 
     public void setPhone(String phone) {
         this.phone = phone;
-    }
-    
-    public float getFairPlayRating() {
-        return fairPlayRating;
-    }
-    
-    public float getAbilityRating() {
-        return abilityRating;
     }
     
     public void setAddress(String address) {
@@ -183,6 +185,42 @@ public class User {
 
 	public void setInvitesReceived(ArrayList<Long> invitesReceived) {
 		this.invitesReceived = invitesReceived;
+	}
+	
+    public float getFairPlayRating() {
+        return fairPlayRating;
+    }
+    
+    public float getAbilityRating() {
+        return abilityRating;
+    }
+	
+	public void setFairPlayRating(float fairPlayRating) {
+		this.fairPlayRating = fairPlayRating;
+	}
+
+	public void setAbilityRating(float abilityRating) {
+		this.abilityRating = abilityRating;
+	}
+
+	public int getTimesRated() {
+		return timesRated;
+	}
+
+	public void setTimesRated(int timesRated) {
+		this.timesRated = timesRated;
+	}
+	
+	public void computeRating(float ability, float fairPlay){
+		float abilityRating = (this.getAbilityRating() * this.getTimesRated() + ability)
+				/(this.getTimesRated() + 1);
+		
+		float fairPlayRating = (this.getAbilityRating() * this.getTimesRated() + ability)
+				/(this.getTimesRated() + 1);
+		
+		this.setAbilityRating(abilityRating);
+		this.setFairPlayRating(fairPlayRating);
+		this.setTimesRated(this.getTimesRated() + 1);
 	}
 	
 }

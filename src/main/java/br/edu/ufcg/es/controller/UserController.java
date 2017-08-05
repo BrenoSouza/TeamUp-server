@@ -73,7 +73,10 @@ public class UserController {
                     user.getMyGames(),
                     user.getGamesRequested(),
                     user.getFavoriteUsers(),
-                    user.getInvitesReceived());
+                    user.getInvitesReceived(),
+                    user.getTimesRated(),
+                    user.getAbilityRating(),
+                    user.getFairPlayRating());
 
             return new ResponseEntity<>(userService.update(userUpdate), HttpStatus.OK);
     }
@@ -165,7 +168,8 @@ public class UserController {
     }
     
     @RequestMapping(value = "/user/search", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<User>> searchUser(@RequestHeader(value = "Authorization") String token, @RequestBody String name){
+    public ResponseEntity<List<User>> searchUser(@RequestHeader(value = "Authorization") String token,
+    		@RequestBody String name){
        User user = tokenService.getUser(token);
        System.out.println(name);
        if(user != null){
