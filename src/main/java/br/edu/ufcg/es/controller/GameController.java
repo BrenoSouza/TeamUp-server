@@ -95,8 +95,9 @@ public class GameController {
                                 registerGame.getName());
         
         gameService.create(game);
+        game.getGuests().add(user.getId());
         updateUserGames(user, game.getId());
-        return new ResponseEntity<>(game, HttpStatus.CREATED);
+        return new ResponseEntity<>(gameService.update(game), HttpStatus.CREATED);
     }
     
     private void updateUserGames(User user, long gameId){ // adiciona uma partida a lista de partidas em que
@@ -216,16 +217,17 @@ public class GameController {
     		@PathVariable("id") Long id){
     	User user = tokenService.getUser(token);
     	Game game = gameService.getById(id);
-    	if (user != null) {			
+    	if (user != null) {
+    		
+			ArrayList<Long> guestUsers = game.getGuests();
+			guestUsers.remove(user.getId());
+			game.setGuests(guestUsers);
+			gameService.update(game);
+			
     		if (user.getId() != game.getIdOwner()) {
     			ArrayList<Long> games = user.getGames();
     			games.remove(id);
     			user.setGames(games);
-    			
-    			ArrayList<Long> guestUsers = game.getGuests();
-    			guestUsers.remove(user.getId());
-    			game.setGuests(guestUsers);
-    			gameService.update(game);
     		}
     		else {
     			ArrayList<Long> games = user.getMyGames();
@@ -234,8 +236,8 @@ public class GameController {
     			
 				if (game.getGuests().isEmpty()) {
 					//remove os pedidos de entrada na partida
-		        	ArrayList<Long> guestUsers = game.getGuestsRequests();
-		        	for (Long userId : guestUsers) {
+		        	ArrayList<Long> guestRequests = game.getGuestsRequests();
+		        	for (Long userId : guestRequests) {
 						User guestUser = userService.getById(userId);
 						games = guestUser.getGamesRequested();
 						games.remove(id);
@@ -249,6 +251,7 @@ public class GameController {
 					game.setIdOwner(game.getGuests().get(0));
 					ArrayList<Long> newOwnerGames = newOwner.getMyGames();
 					newOwnerGames.add(id);
+					newOwner.getGames().remove(id);
 					userService.update(newOwner);
 					gameService.update(game);
 				}
@@ -327,7 +330,7 @@ public class GameController {
     	Game game = gameService.getById(id);
     	User evaluatedUser = userService.getById(userId);
     	
-    	if (user != null) {
+    	if (user != null && user.getId() != evaluatedUser.getId()) {
     		evaluatedUser.computeRating(ability, fairPlay);
     		
         	userService.update(evaluatedUser);
@@ -356,7 +359,10 @@ public class GameController {
     	User user = tokenService.getUser(token);
     	Game game = gameService.getById(id);
         if(user != null && game.isFinished() == true) {
-            return new ResponseEntity<>(userService.getAllById(game.getGuests()), HttpStatus.OK);
+        	ArrayList<User> users = (ArrayList<User>) userService.getAllById(game.getGuests());
+        	users.remove(user.getId());
+        	
+            return new ResponseEntity<>(users, HttpStatus.OK);
         }
         return new ResponseEntity<>(new ArrayList<User>(), HttpStatus.UNAUTHORIZED);
     }

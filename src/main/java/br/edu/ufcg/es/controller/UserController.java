@@ -81,9 +81,7 @@ public class UserController {
             return new ResponseEntity<>(userService.update(userUpdate), HttpStatus.OK);
     }
     
-    @RequestMapping(value = "/user", method = RequestMethod.DELETE,
-    		consumes = MediaType.APPLICATION_JSON_UTF8_VALUE,
-    		produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/user", method = RequestMethod.DELETE, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> deleteUser(@RequestHeader(value = "Authorization") String token){
         User user = tokenService.getUser(token);
         if (user != null){
@@ -113,6 +111,7 @@ public class UserController {
         	games = user.getMyGames();
         	for (Long gameId : games) {
 				game = gameService.getById(gameId);
+				game.getGuests().remove(user.getId());
 				if (game.getGuests().isEmpty()) {
 					//remove os pedidos de entrada na partida
 		        	ArrayList<Long> guestUsers = game.getGuestsRequests();
@@ -130,6 +129,7 @@ public class UserController {
 					game.setIdOwner(game.getGuests().get(0));
 					ArrayList<Long> newOwnerGames = newOwner.getMyGames();
 					newOwnerGames.add(gameId);
+					newOwner.getGames().remove(gameId);
 					userService.update(newOwner);
 					gameService.update(game);
 				}
