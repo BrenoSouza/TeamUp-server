@@ -360,7 +360,7 @@ public class GameController {
     	Game game = gameService.getById(id);
         if(user != null && game.isFinished() == true) {
         	ArrayList<User> users = (ArrayList<User>) userService.getAllById(game.getGuests());
-        	users.remove(user.getId());
+        	users.remove(user);
         	
             return new ResponseEntity<>(users, HttpStatus.OK);
         }
