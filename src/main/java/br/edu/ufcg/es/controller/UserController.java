@@ -168,7 +168,7 @@ public class UserController {
     	}  	
     }
     
-    @RequestMapping(value = "/user/searchAddress", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/user/searchByAddress", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<User>> searchUserByAddress(@RequestHeader(value = "Authorization") String token, @RequestBody final SearchDTO searchDTO){
     	User user = tokenService.getUser(token);
     	if(user != null){
@@ -179,7 +179,7 @@ public class UserController {
     }
     
     
-    @RequestMapping(value = "/user/searchAddress", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/user/searchByName", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<User>> searchUserByName(@RequestHeader(value = "Authorization") String token, @RequestBody final SearchDTO searchDTO){
     	User user = tokenService.getUser(token);
     	if(user != null){
