@@ -21,6 +21,7 @@ import br.edu.ufcg.es.component.TokenService;
 import br.edu.ufcg.es.model.Game;
 import br.edu.ufcg.es.model.User;
 import br.edu.ufcg.es.model.DTO.RegisterUser;
+import br.edu.ufcg.es.model.DTO.SearchDTO;
 import br.edu.ufcg.es.service.GameService;
 import br.edu.ufcg.es.service.UserService;
 
@@ -167,18 +168,26 @@ public class UserController {
     	}  	
     }
     
-    @RequestMapping(value = "/user/search", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<User>> searchUser(@RequestHeader(value = "Authorization") String token,
-    		@RequestBody String name){
-       User user = tokenService.getUser(token);
-       System.out.println(name);
-       if(user != null){
-           return new ResponseEntity<>(userService.findByAddress(name),HttpStatus.OK);
-       }
+    @RequestMapping(value = "/user/searchAddress", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<User>> searchUserByAddress(@RequestHeader(value = "Authorization") String token, @RequestBody final SearchDTO searchDTO){
+    	User user = tokenService.getUser(token);
+    	if(user != null){
+    		return new ResponseEntity<>(userService.findByAddress(searchDTO.getName()),HttpStatus.OK);
+    	}
 
-       return new ResponseEntity<>(new ArrayList<User>(), HttpStatus.UNAUTHORIZED);
+    	return new ResponseEntity<>(new ArrayList<User>(), HttpStatus.UNAUTHORIZED);
     }
+    
+    
+    @RequestMapping(value = "/user/searchAddress", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<User>> searchUserByName(@RequestHeader(value = "Authorization") String token, @RequestBody final SearchDTO searchDTO){
+    	User user = tokenService.getUser(token);
+    	if(user != null){
+    		return new ResponseEntity<>(userService.findByName(searchDTO.getName()),HttpStatus.OK);
+    	}
 
+    	return new ResponseEntity<>(new ArrayList<User>(), HttpStatus.UNAUTHORIZED);
+    }
     @RequestMapping(value = "/gameInvites", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Game>> getMyGameInvites(@RequestHeader(value = "Authorization") String token){
     	User user = tokenService.getUser(token);
