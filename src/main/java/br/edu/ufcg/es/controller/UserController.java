@@ -82,7 +82,7 @@ public class UserController {
     }
     
     @RequestMapping(value = "/user", method = RequestMethod.DELETE, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> deleteUser(@RequestHeader(value = "Authorization") String token){
+    public ResponseEntity<User> deleteUser(@RequestHeader(value = "Authorization") String token){
         User user = tokenService.getUser(token);
         if (user != null){
         	//remover das suas partidas, remover das partidas em que é convidado e das partidas que solicitou entrada
@@ -135,9 +135,9 @@ public class UserController {
 				}
 			}
         	userService.removeById(user.getId());
-        	return new ResponseEntity<>("Usuário deletado do sistema com sucesso.", HttpStatus.OK);
+        	return new ResponseEntity<>(new User(), HttpStatus.OK);
         }
-        return new ResponseEntity<>("AUTH ERROR.", HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(new User(), HttpStatus.UNAUTHORIZED);
     }
     
     @RequestMapping(value = "/favoriteusers", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)

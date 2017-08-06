@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import br.edu.ufcg.es.component.TokenService;
 import br.edu.ufcg.es.model.Game;
 import br.edu.ufcg.es.model.User;
+import br.edu.ufcg.es.model.DTO.RatingParameters;
 import br.edu.ufcg.es.model.DTO.RegisterGame;
 import br.edu.ufcg.es.service.GameService;
 import br.edu.ufcg.es.service.UserService;
@@ -124,6 +125,17 @@ public class GameController {
             return new ResponseEntity<>(gameService.getAllById(user.getGames()), HttpStatus.OK);
         }
         return new ResponseEntity<>(new ArrayList<Game>(), HttpStatus.UNAUTHORIZED);
+    }
+    
+    @RequestMapping(value = "/guests/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<User>> getGameGuests(@RequestHeader(value = "Authorization") String token,
+    		@PathVariable("id") Long id){
+    	User user = tokenService.getUser(token);
+    	Game game = gameService.getById(id);
+        if(user != null) {
+            return new ResponseEntity<>(userService.getAllById(game.getGuests()), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(new ArrayList<User>(), HttpStatus.UNAUTHORIZED);
     }
     
     @RequestMapping(value = "/gameRequest/{id}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -323,15 +335,15 @@ public class GameController {
     
     @RequestMapping(value = "/evaluate/{id}/{userId}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Game> evaluateUsers(@RequestHeader(value = "Authorization") String token,
-        	@PathVariable("id") Long id, @PathVariable("userId") Long userId, @RequestBody int ability,
-        	@RequestBody int fairPlay){
+        	@PathVariable("id") Long id, @PathVariable("userId") Long userId,
+        	@RequestBody RatingParameters rating){
     	
     	User user = tokenService.getUser(token);
     	Game game = gameService.getById(id);
     	User evaluatedUser = userService.getById(userId);
     	
     	if (user != null && user.getId() != evaluatedUser.getId()) {
-    		evaluatedUser.computeRating(ability, fairPlay);
+    		evaluatedUser.computeRating(rating.getAbility(), rating.getFairPlay());
     		
         	userService.update(evaluatedUser);
         	return new ResponseEntity<>(gameService.update(game), HttpStatus.OK);

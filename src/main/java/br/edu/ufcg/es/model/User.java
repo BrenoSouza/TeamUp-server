@@ -215,7 +215,7 @@ public class User {
 		float abilityRating = (this.getAbilityRating() * this.getTimesRated() + ability)
 				/(this.getTimesRated() + 1);
 		
-		float fairPlayRating = (this.getAbilityRating() * this.getTimesRated() + ability)
+		float fairPlayRating = (this.getFairPlayRating() * this.getTimesRated() + fairPlay)
 				/(this.getTimesRated() + 1);
 		
 		this.setAbilityRating(abilityRating);
