@@ -41,6 +41,9 @@ public class Game {
 	@Column
 	private ArrayList<Long> guestRequests;
 	
+	@Column
+	private boolean finished;
+	
 	public Game(String date, String local, String sport, String description, String name){ // construtor normal
 		this.date = date; 
 		this.local = local;
@@ -49,6 +52,7 @@ public class Game {
 		this.description = description;
 		this.guests = new ArrayList<>(); // iniciam vazias
 		this.guestRequests = new ArrayList<>();
+		this.finished = false;
 	}
 
 	public Game(String date, String local, String sport, String description, long idOwner, String name){ // construtor passando 
@@ -60,10 +64,11 @@ public class Game {
 		this.guests = new ArrayList<>();
 		this.guestRequests = new ArrayList<>();
 		this.name = name;
+		this.finished = false;
 	}
-	
+
 	public Game(String date, String local, String sport, String description, long idOwner,
-			ArrayList<Long> guests, ArrayList<Long> guestsRequests, String name){
+			ArrayList<Long> guests, ArrayList<Long> guestsRequests, String name, boolean finished){
 		this.date = date;
 		this.local = local;
 		this.sport = sport;
@@ -72,6 +77,7 @@ public class Game {
 		this.idOwner = idOwner; // seta idOwner
 		this.guests = guests;
 		this.guestRequests = guestsRequests;
+		this.finished = finished;
 	}
 	
 	public Game(){
@@ -148,5 +154,13 @@ public class Game {
 
 	public void setGuestRequests(ArrayList<Long> guestRequests) {
 		this.guestRequests = guestRequests;
+	}
+	
+	public boolean isFinished() {
+		return finished;
+	}
+
+	public void setFinished(boolean finished) {
+		this.finished = finished;
 	}
 }

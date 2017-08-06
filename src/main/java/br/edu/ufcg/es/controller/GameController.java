@@ -72,7 +72,8 @@ public class GameController {
                     user.getId(),
                     game.getGuests(),
                     game.getGuestsRequests(),
-                    registerGame.getName());
+                    registerGame.getName(),
+                    game.isFinished());
 
             gameUpdate.setId(id);
             return new ResponseEntity<>(gameService.update(gameUpdate), HttpStatus.OK);
@@ -333,6 +334,31 @@ public class GameController {
         	return new ResponseEntity<>(gameService.update(game), HttpStatus.OK);
     	}
     	return new ResponseEntity<>(game, HttpStatus.UNAUTHORIZED);
+    }
+    
+    @RequestMapping(value = "/endGame/{id}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Game> endGame(@RequestHeader(value = "Authorization") String token,
+    		@PathVariable("id") Long id){
+       User user = tokenService.getUser(token);
+       Game game = gameService.getById(id);
+       
+       if(user != null && user.getId() == game.getIdOwner()){
+    	   game.setFinished(true);
+    	   
+           return new ResponseEntity<>(gameService.update(game),HttpStatus.OK);
+       }
+       return new ResponseEntity<>(game, HttpStatus.UNAUTHORIZED);
+    }
+    
+    @RequestMapping(value = "/usersToEvaluate/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<User>> getUsersToEvaluate(@RequestHeader(value = "Authorization") String token,
+    		@PathVariable("id") Long id){
+    	User user = tokenService.getUser(token);
+    	Game game = gameService.getById(id);
+        if(user != null && game.isFinished() == true) {
+            return new ResponseEntity<>(userService.getAllById(game.getGuests()), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(new ArrayList<User>(), HttpStatus.UNAUTHORIZED);
     }
     
 }
