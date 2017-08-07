@@ -22,6 +22,7 @@ import br.edu.ufcg.es.model.Game;
 import br.edu.ufcg.es.model.User;
 import br.edu.ufcg.es.model.DTO.RatingParameters;
 import br.edu.ufcg.es.model.DTO.RegisterGame;
+import br.edu.ufcg.es.model.DTO.SearchDTO;
 import br.edu.ufcg.es.service.GameService;
 import br.edu.ufcg.es.service.UserService;
 
@@ -377,6 +378,36 @@ public class GameController {
             return new ResponseEntity<>(users, HttpStatus.OK);
         }
         return new ResponseEntity<>(new ArrayList<User>(), HttpStatus.UNAUTHORIZED);
+    }
+    
+    @RequestMapping(value = "/game/searchByAddress", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<Game>> searchGameByAddress(@RequestHeader(value = "Authorization") String token, @RequestBody final SearchDTO searchDTO){
+    	User user = tokenService.getUser(token);
+    	if(user != null){
+    		return new ResponseEntity<>(gameService.findByAddress(searchDTO.getName()),HttpStatus.OK);
+    	}
+
+    	return new ResponseEntity<>(new ArrayList<Game>(), HttpStatus.UNAUTHORIZED);
+    }
+    
+    @RequestMapping(value = "/game/searchByName", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<Game>> searchGameByName(@RequestHeader(value = "Authorization") String token, @RequestBody final SearchDTO searchDTO){
+    	User user = tokenService.getUser(token);
+    	if(user != null){
+    		return new ResponseEntity<>(gameService.findByName(searchDTO.getName()),HttpStatus.OK);
+    	}
+
+    	return new ResponseEntity<>(new ArrayList<Game>(), HttpStatus.UNAUTHORIZED);
+    }
+    
+    @RequestMapping(value = "/game/searchBySport", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<Game>> searchGameBySport(@RequestHeader(value = "Authorization") String token, @RequestBody final SearchDTO searchDTO){
+    	User user = tokenService.getUser(token);
+    	if(user != null){
+    		return new ResponseEntity<>(gameService.getBySport(searchDTO.getName()),HttpStatus.OK);
+    	}
+
+    	return new ResponseEntity<>(new ArrayList<Game>(), HttpStatus.UNAUTHORIZED);
     }
     
 }
