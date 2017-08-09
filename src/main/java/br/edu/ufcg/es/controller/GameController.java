@@ -161,6 +161,15 @@ public class GameController {
     	return new ResponseEntity<>(new Game(), HttpStatus.UNAUTHORIZED);
     }
     
+    @RequestMapping(value = "/gamesRequested", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<Game>> getGamesRequested(@RequestHeader(value = "Authorization") String token){
+    	User user = tokenService.getUser(token);
+        if(user != null) {
+            return new ResponseEntity<>(gameService.getAllById(user.getGamesRequested()), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(new ArrayList<Game>(), HttpStatus.UNAUTHORIZED);
+    }
+    
     @RequestMapping(value = "/acceptRequest/{gameId}/{requestedId}", method = RequestMethod.POST) 
     public ResponseEntity<Game> acceptRequest(@RequestHeader(value = "Authorization") String token, 
     		@PathVariable("gameId") Long gameId, @PathVariable("requestedId") Long requestedId ){
