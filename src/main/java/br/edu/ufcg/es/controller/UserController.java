@@ -68,17 +68,17 @@ public class UserController {
                     registerUser.getEmail(),
                     registerUser.getPassword(),
                     registerUser.getPhone(),
-                    registerUser.getAddress(),
-                    user.getId(),
-                    user.getGames(),
-                    user.getMyGames(),
-                    user.getGamesRequested(),
-                    user.getFavoriteUsers(),
-                    user.getInvitesReceived(),
-                    user.getTimesRated(),
-                    user.getAbilityRating(),
-                    user.getFairPlayRating());
-
+                    registerUser.getAddress());
+    	userUpdate.setId( user.getId());
+    	userUpdate.setGames(user.getGames());
+    	userUpdate.setMyGames(user.getMyGames());
+    	userUpdate.setGamesRequested(user.getGamesRequested());
+    	userUpdate.setFavoriteUsers(user.getFavoriteUsers());
+    	userUpdate.setInvitesReceived(user.getInvitesReceived());
+    	userUpdate.setTimesRated(user.getTimesRated());
+    	userUpdate.setAbilityRating(user.getAbilityRating());
+    	userUpdate.setFairPlayRating(user.getFairPlayRating());
+          
             return new ResponseEntity<>(userService.update(userUpdate), HttpStatus.OK);
     }
     

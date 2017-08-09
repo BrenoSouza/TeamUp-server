@@ -54,8 +54,9 @@ public class Game {
 		this.guestRequests = new ArrayList<>();
 		this.finished = false;
 	}
+	//comentado por ser melhor usar os sets para evitar um grande numero de parametros
 
-	public Game(String date, String local, String sport, String description, long idOwner, String name){ // construtor passando 
+	/*public Game(String date, String local, String sport, String description, long idOwner, String name){ // construtor passando 
 		this.date = date;																	// o id e sem estrutura de dados
 		this.local = local;
 		this.sport = sport;
@@ -65,9 +66,9 @@ public class Game {
 		this.guestRequests = new ArrayList<>();
 		this.name = name;
 		this.finished = false;
-	}
+	}*/
 
-	public Game(String date, String local, String sport, String description, long idOwner,
+	/*public Game(String date, String local, String sport, String description, long idOwner,
 			ArrayList<Long> guests, ArrayList<Long> guestsRequests, String name, boolean finished){
 		this.date = date;
 		this.local = local;
@@ -78,7 +79,7 @@ public class Game {
 		this.guests = guests;
 		this.guestRequests = guestsRequests;
 		this.finished = finished;
-	}
+	}*/
 	
 	public Game(){
 		

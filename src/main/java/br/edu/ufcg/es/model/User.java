@@ -75,7 +75,7 @@ public class User {
         this.fairPlayRating = 0;
     }
 
-	public User(String name, String email, String password, String phone, String address, Long id,
+	/*public User(String name, String email, String password, String phone, String address, Long id,
 			ArrayList<Long> games, ArrayList<Long> myGames, ArrayList<Long> gamesRequested,
 			ArrayList<Long> favoriteUsers, ArrayList<Long> invitesReceived, int timesRated,
 			float abilityRating, float fairPlayRating) {
@@ -93,7 +93,7 @@ public class User {
         this.timesRated = timesRated;
         this.abilityRating = abilityRating;
         this.fairPlayRating = fairPlayRating;
-    }
+    }*/
 
 	public User() {
     	

@@ -70,12 +70,12 @@ public class GameController {
                     registerGame.getLocal(),
                     registerGame.getSport(),
                     registerGame.getDescription(),
-                    user.getId(),
-                    game.getGuests(),
-                    game.getGuestsRequests(),
-                    registerGame.getName(),
-                    game.isFinished());
-
+                    registerGame.getName());
+        	gameUpdate.setIdOwner(user.getId());
+        	gameUpdate.setGuests(game.getGuests());
+        	gameUpdate.setGuestRequests(game.getGuestsRequests());
+        	gameUpdate.setFinished( game.isFinished());
+            
             gameUpdate.setId(id);
             return new ResponseEntity<>(gameService.update(gameUpdate), HttpStatus.OK);
         }
@@ -92,8 +92,8 @@ public class GameController {
                                 registerGame.getLocal(),
                                 registerGame.getSport(),
                                 registerGame.getDescription(),
-                                user.getId(),
                                 registerGame.getName());
+        game.setIdOwner(user.getId());
         
         gameService.create(game);
         game.getGuests().add(user.getId());
@@ -342,7 +342,7 @@ public class GameController {
     	Game game = gameService.getById(id);
     	User evaluatedUser = userService.getById(userId);
     	
-    	if (user != null && user.getId() != evaluatedUser.getId()) {
+    	if ((user != null) && (!user.getId().equals(evaluatedUser.getId()))) {
     		evaluatedUser.computeRating(rating.getAbility(), rating.getFairPlay());
     		
         	userService.update(evaluatedUser);
