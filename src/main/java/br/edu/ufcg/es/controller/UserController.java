@@ -178,7 +178,6 @@ public class UserController {
     	return new ResponseEntity<>(new ArrayList<User>(), HttpStatus.UNAUTHORIZED);
     }
     
-    
     @RequestMapping(value = "/user/searchByName", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<User>> searchUserByName(@RequestHeader(value = "Authorization") String token, @RequestBody final SearchDTO searchDTO){
     	User user = tokenService.getUser(token);
@@ -188,6 +187,7 @@ public class UserController {
 
     	return new ResponseEntity<>(new ArrayList<User>(), HttpStatus.UNAUTHORIZED);
     }
+    
     @RequestMapping(value = "/gameInvites", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Game>> getMyGameInvites(@RequestHeader(value = "Authorization") String token){
     	User user = tokenService.getUser(token);
