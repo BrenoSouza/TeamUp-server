@@ -281,7 +281,7 @@ public class GameController {
     	User user = tokenService.getUser(token);
     	User guestUser = userService.getById(userId);
     	Game game = gameService.getById(id);
-    	if (user != null && user.getId() == game.getIdOwner()) {
+    	if (user != null && user.getId() == game.getIdOwner() && game.getIdOwner() != guestUser.getId()) {
 			ArrayList<Long> games = guestUser.getGames();
 			games.remove(id);
 			guestUser.setGames(games);
