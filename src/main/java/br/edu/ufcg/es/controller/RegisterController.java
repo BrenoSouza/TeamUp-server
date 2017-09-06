@@ -24,14 +24,16 @@ public class RegisterController {
     }
     
     @RequestMapping(value = "/register", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<String> registerUser(@Valid @RequestBody RegisterUser registerUser){
+    public ResponseEntity<User> registerUser(@Valid @RequestBody RegisterUser registerUser){
         User user = new User(registerUser.getName(),
                                 registerUser.getEmail(),
                                 registerUser.getPassword(),
                                 registerUser.getPhone(),
                                 registerUser.getAddress());
-
-        userService.create(user);
-        return new ResponseEntity<>("Cadastro realizado com sucesso.", HttpStatus.CREATED);
+        if(userService.getByEmail(user.getEmail()) == null) {
+        	userService.create(user);
+        	return new ResponseEntity<>(user, HttpStatus.CREATED);
+        }
+        return new ResponseEntity<>(new User(), HttpStatus.CONFLICT);
     }
 }

@@ -10,7 +10,13 @@ public interface Crud<T> {
     T getById(Long id);
 
     T update(T t);
-
+    
+    List<T> getAllById(List<Long> ids);
+    
+    List<T> findByName(String name);
+    
+    List<T> findByAddress(String address);
+    
     boolean removeById(Long id);
 
     boolean removeAll();
