@@ -1,5 +1,8 @@
 package br.edu.ufcg.es.controller;
 
+import java.io.PrintWriter;
+import java.lang.management.ManagementFactory;
+import com.sun.management.OperatingSystemMXBean;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +36,9 @@ public class GameController {
     private TokenService tokenService;
     private UserService userService;
     
+    private static List<Double> memory = new ArrayList<Double>();
+    private static List<Long> memoryGet = new ArrayList<Long>();
+    
     @Autowired
     public GameController(GameService gameService, TokenService tokenService, UserService userService) {
 		this.gameService = gameService;
@@ -50,11 +56,32 @@ public class GameController {
        return new ResponseEntity<>(new ArrayList<Game>(), HttpStatus.UNAUTHORIZED);
     }
     
-    @RequestMapping(value = "/game/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @SuppressWarnings("restriction")
+	@RequestMapping(value = "/game/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Game> getGameById(@RequestHeader(value = "Authorization") String token,
     		@PathVariable("id") Long id){
     	User user = tokenService.getUser(token);
         if(user != null){
+            OperatingSystemMXBean op = (OperatingSystemMXBean) (ManagementFactory.getOperatingSystemMXBean());
+            GameController.memory.add(op.getProcessCpuLoad());
+            
+            if(GameController.memory.size() == 10) {
+            	PrintWriter writer = null;
+            	try {
+            		writer = new PrintWriter("cpu_get_10.csv", "UTF-8");
+            		for(int i = 0; i < GameController.memory.size(); i++) {
+            			writer.println(Double.toString(GameController.memory.get(i)));
+            		}
+            		System.out.println("foooi ###################################################################");
+            		GameController.memory.clear();
+    	        } catch(Exception e) {
+    	        	System.out.println("Deu ruim");
+    	        } finally {
+    	        	if(writer != null) {
+    	        		writer.close();
+    	        	}
+    	        }
+            }
             return new ResponseEntity<>(gameService.getById(id), HttpStatus.OK);
         }
         return new ResponseEntity<>(new Game(), HttpStatus.UNAUTHORIZED);
@@ -84,7 +111,8 @@ public class GameController {
         return new ResponseEntity<>(new Game(), HttpStatus.UNAUTHORIZED);
     }
     
-    @RequestMapping(value = "/game", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @SuppressWarnings("restriction")
+	@RequestMapping(value = "/game", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<Game> registerGame(@RequestHeader(value = "Authorization") String token,
     		@Valid @RequestBody RegisterGame registerGame){
     	User user = tokenService.getUser(token);
@@ -99,6 +127,7 @@ public class GameController {
         gameService.create(game);
         game.getGuests().add(user.getId());
         updateUserGames(user, game.getId());
+//        System.out.println(used);
         return new ResponseEntity<>(gameService.update(game), HttpStatus.CREATED);
     }
     
